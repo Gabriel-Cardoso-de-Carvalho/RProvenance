@@ -10,5 +10,15 @@ package rprov;
  * @author Gaburieru
  */
 public class WasGeneratedBy {
+    public String id;
+    public Activity activity;
+    public Entity entity;
+
+    public WasGeneratedBy(String id, Activity activity, Entity entity) {
+        this.id = id;
+        this.activity = activity;
+        this.entity = entity;
+    }
+    
     
 }

@@ -15,7 +15,7 @@ public class RProv {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        ParseJson p = new ParseJson("C:\\Users\\Gaburieru\\Documents\\Git\\RProvenance\\scriptTests\\basicTest\\expected_basicTest_prov.json");
     }
     
 }

@@ -10,5 +10,13 @@ package rprov;
  * @author Gaburieru
  */
 public class Prefix {
+    public String prov;
+    public String rdt;
+
+    public Prefix(String prov, String rdt) {
+        this.prov = prov;
+        this.rdt = rdt;
+    }
+    
     
 }
