@@ -18,5 +18,8 @@ public class Prefix {
         this.rdt = rdt;
     }
     
-    
+    @Override
+    public String toString(){
+        return "Prefix:\nprov = " + prov + "\nrdt = " + rdt;
+    }
 }

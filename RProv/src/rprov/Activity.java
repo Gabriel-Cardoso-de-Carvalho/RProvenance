@@ -17,13 +17,13 @@ public class Activity {
     public String name;
     public String type;
     public double elapsedTime;
-    public int scriptNum;
-    public int startLine;
-    public int startCol;
-    public int endCol;
-    public int endLine;
+    public long scriptNum;
+    public long startLine;
+    public long startCol;
+    public long endCol;
+    public long endLine;
 
-    public Activity(String id, String name, String type, double elapsedTime, int scriptNum, int startLine, int startCol, int endCol, int endLine) {
+    public Activity(String id, String name, String type, double elapsedTime, long scriptNum, long startLine, long startCol, long endCol, long endLine) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -37,6 +37,12 @@ public class Activity {
         
     public Activity(String id, String name, String type, double elapsedTime, String scriptNum, String startLine, String startCol, String endCol, String endLine) {
         this(id,name,type,elapsedTime,Activity.NA,Activity.NA,Activity.NA,Activity.NA,Activity.NA);
+    }
+    
+    @Override
+    public String toString(){
+        return "id = "+id+"\n\tname = " + name + "\n\ttype = " + type + "\n\telapsedTime = " + elapsedTime + "\n\tscriptNum = " + scriptNum +
+                "\n\tstartLine = " + startLine + "\n\tstartCol = " + startCol + "\n\tendCol = " + endCol + "\n\tendLine = " + endLine;
     }
     
 }
