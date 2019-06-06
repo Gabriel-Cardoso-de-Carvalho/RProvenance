@@ -20,5 +20,14 @@ public class WasInformedBy {
         this.informed = informed;
     }
     
+    @Override
+    public String toString(){
+        String a,b;
+        if(informant == null) a = "NA";
+        else a = informant.id;
+        if(informed == null) b = "NA";
+        else b = informed.id;
+        return "id = "+id+"\n\tinformant = " + a + "\n\tinformed = " + b;
+    }
     
 }

@@ -20,5 +20,14 @@ public class WasGeneratedBy {
         this.entity = entity;
     }
     
+    @Override
+    public String toString(){
+        String a,b;
+        if(activity == null) a = "NA";
+        else a = activity.id;
+        if(entity == null) b = "NA";
+        else b = entity.id;
+        return "id = "+id+"\n\tactivity = " + a + "\n\tentity = " + b;
+    } 
     
 }

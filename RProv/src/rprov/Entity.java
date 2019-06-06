@@ -13,18 +13,33 @@ public class Entity {
     public String id;
     public String name;
     public String value;
-    public String valType;
+    public String type;
 
     public Entity(String id, String name, String value, String valType) {
         this.id = id;
         this.name = name;
         this.value = value;
-        this.valType = valType;
+        this.type = valType;
     }
     
     
     public Entity(String id, String name) {
         this(id,name,null,"function");
+    }
+    
+    public Entity(String id){
+        this.id = id;
+    }
+    
+    @Override
+   public String toString(){
+        if(value != null) return "id = "+id+"\n\tname = " + name + "\n\tvalue = " + value + "\n\tvaltype = " + type;
+        return "id = "+id+"\n\tname = " + name + "\n\tvaltype = " + type;
+   }
+    
+   @Override
+    public boolean equals(Object o){
+        return this.id.equals(((Entity)o).id);
     }
     
 }

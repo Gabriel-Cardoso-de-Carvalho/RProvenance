@@ -11,7 +11,7 @@ package rprov;
  */
 public class Activity {
     
-    public static int NA = Integer.MIN_VALUE;
+    public static long NA = Integer.MIN_VALUE;
     
     public String id;
     public String name;
@@ -36,13 +36,39 @@ public class Activity {
     }
         
     public Activity(String id, String name, String type, double elapsedTime, String scriptNum, String startLine, String startCol, String endCol, String endLine) {
-        this(id,name,type,elapsedTime,Activity.NA,Activity.NA,Activity.NA,Activity.NA,Activity.NA);
+        
+        this.id = id;
+        this.name = name;
+        this.type = type;     
+        this.elapsedTime = elapsedTime;
+        this.scriptNum = Activity.NA;
+        this.startLine = Activity.NA;
+        this.startCol = Activity.NA;
+        this.endCol = Activity.NA;
+        this.endLine = Activity.NA;  
+        
+        if (!scriptNum.equals("NA")) this.scriptNum = Math.round(Double.parseDouble(scriptNum));
+        if (!startLine.equals("NA")) this.startLine = Math.round(Double.parseDouble(startLine));
+        if (!startCol.equals("NA")) this.startCol = Math.round(Double.parseDouble(startCol));
+        if (!endLine.equals("NA")) this.endLine = Math.round(Double.parseDouble(endLine));
+        if (!endCol.equals("NA")) this.endCol = Math.round(Double.parseDouble(endCol));
+        
+        
+    }
+    
+    public Activity(String id){
+        this.id = id;
     }
     
     @Override
     public String toString(){
         return "id = "+id+"\n\tname = " + name + "\n\ttype = " + type + "\n\telapsedTime = " + elapsedTime + "\n\tscriptNum = " + scriptNum +
-                "\n\tstartLine = " + startLine + "\n\tstartCol = " + startCol + "\n\tendCol = " + endCol + "\n\tendLine = " + endLine;
+                "\n\tstartLine = " + startLine + "\n\tstartCol = " + startCol + "\n\tendLine = " + endLine + "\n\tendCol = " + endCol;
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        return this.id.equals(((Activity)o).id);
     }
     
 }
