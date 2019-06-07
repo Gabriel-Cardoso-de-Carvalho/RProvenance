@@ -7,6 +7,7 @@ package rprov;
 
 import java.io.*;
 import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +17,7 @@ import java.util.logging.Logger;
  */
 public class ParseJson {
     public File json;
+    public File script;
     public Prefix prefix;
     public Environment env;
     public LinkedList<Activity> activities;
@@ -23,18 +25,23 @@ public class ParseJson {
     public LinkedList<WasInformedBy> informedBy;
     public LinkedList<WasGeneratedBy> generatedBy;
     public LinkedList<Used> used;
+    public LinkedList<String> lines;
 
     /**
      *
-     * @param fileName
+     * @param provFileName
+     * @param scriptFileName
+     * 
      */
-    public ParseJson(String fileName) {
-        json = new File(fileName);
+    public ParseJson(String provFileName, String scriptFileName) {
+        json = new File(provFileName);
+        script = new File(scriptFileName);
         activities = new LinkedList<>();
         entities = new LinkedList<>();
         informedBy = new LinkedList<>();
         generatedBy = new LinkedList<>();
         used = new LinkedList<>();
+        lines = new LinkedList<>();
         try{
             StreamTokenizer tokenizer = new StreamTokenizer(new BufferedReader(new FileReader(json)));
             
@@ -249,28 +256,45 @@ public class ParseJson {
             }
             
         } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
+            System.out.println("FileNotFoundException");
         } catch (IOException ex) {
-            ex.printStackTrace();
+            System.out.println("IOException");
         }
         
-        System.out.println(this.prefix);
-        for (int i = 0; i < this.activities.size(); i++) {
-            System.out.println(this.activities.get(i));
+        try{
+            Scanner scanner = new Scanner(script);
+            while(scanner.hasNext()){
+                this.lines.add(scanner.nextLine());
+            }
+            
+        }catch (FileNotFoundException ex) {
+            System.out.println("FileNotFoundException");
         }
-        for (int i = 0; i < this.entities.size(); i++) {
-            System.out.println(this.entities.get(i));
-        }
-        for (int i = 0; i < this.informedBy.size(); i++) {
-            System.out.println(this.informedBy.get(i));
-        }
-        for (int i = 0; i < this.generatedBy.size(); i++) {
-            System.out.println(this.generatedBy.get(i));
-        }
-        for (int i = 0; i < this.used.size(); i++) {
-            System.out.println(this.used.get(i));
-        }
+        
+        
+        if(true) printJson();
     }
     
+    public void printJson(){
+            System.out.println(this.prefix);
+            for (int i = 0; i < this.activities.size(); i++) {
+                System.out.println(this.activities.get(i));
+            }
+            for (int i = 0; i < this.entities.size(); i++) {
+                System.out.println(this.entities.get(i));
+            }
+            for (int i = 0; i < this.informedBy.size(); i++) {
+                System.out.println(this.informedBy.get(i));
+            }
+            for (int i = 0; i < this.generatedBy.size(); i++) {
+                System.out.println(this.generatedBy.get(i));
+            }
+            for (int i = 0; i < this.used.size(); i++) {
+                System.out.println(this.used.get(i));
+            }
+            for (int i = 0; i < this.lines.size(); i++) {
+                System.out.println(this.lines.get(i));
+            }
+    }
     
 }
