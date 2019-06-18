@@ -5,6 +5,8 @@
  */
 package rprov;
 
+import java.io.File;
+
 /**
  *
  * @author Gaburieru
@@ -15,7 +17,7 @@ public class RProv {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ParseJson p = new ParseJson("C:\\Users\\Gaburieru\\Documents\\Git\\RProvenance\\scriptTests\\basicTest\\prov_basicTest\\prov.json","C:\\Users\\Gaburieru\\Documents\\Git\\RProvenance\\basicTest.R");
+        new ParseJson("C:\\Users\\Frog33\\Documents\\git\\RProvenance\\scriptTests\\basicTest\\expected_basicTest_prov.json","C:\\Users\\Frog33\\Documents\\git\\RProvenance\\basicTest.R");
     }
     
 }
