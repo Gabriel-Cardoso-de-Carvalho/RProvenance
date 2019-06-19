@@ -1,0 +1,25 @@
+{
+	"prefix": {
+		"prov": "http://www.w3.org/ns/prov#",
+		"rdt": "https://github.com/End-to-end-provenance/ExtendedProvJson/blob/master/JSON-format.md"
+	},
+
+	"agent" : {
+		// agent: this json file and the tool that produced this
+		"rdt:a1": {
+			"rdt:tool.name": "rdt",
+			"rdt:tool.version": "3.0.3",
+			"rdt:json.version": "2.1"
+		}
+	},
+
+	"activity" : {},
+
+	"entity" : {},
+
+	"wasInformedBy" : {},
+
+	"wasGeneratedBy" : {},
+
+	"used" : {}
+}
