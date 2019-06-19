@@ -131,7 +131,7 @@ public class ParseJson {
                                     }   
                                 }
                                 //System.out.println(id+" "+ name+" "+type+" "+et+" "+sn+" "+sl+" "+sc+" "+el+" "+ec);
-                                a = new Activity(id,name,type,et,sn,sl,sc,el,ec);
+                                a = new Activity(id,name,type,et,sn,sl,sc,ec,el);
                                 //System.out.println(a);
                                 this.activities.add(a);
                                 token = tokenizer.nextToken();
@@ -256,7 +256,7 @@ public class ParseJson {
             }
             
         } catch (FileNotFoundException ex) {
-            System.out.println("FileNotFoundException");
+            System.out.println("File of provenance was not found");
         } catch (IOException ex) {
             System.out.println("IOException");
         }
@@ -268,33 +268,92 @@ public class ParseJson {
             }
             
         }catch (FileNotFoundException ex) {
-            System.out.println("FileNotFoundException");
+            System.out.println("Path for the Script is not correct");
         }
         
+        //Process the parsed provenance
+        
+        this.manageActivities();
+                
+        try{
+            PrintWriter fw = new PrintWriter(new FileWriter(json.getPath().substring(0, json.getPath().length()-5)+".YW"));
+            for (int i = 0; i < this.lines.size(); i++) {
+                fw.print(lines.get(i)+"\n");
+            }
+            fw.close();
+            
+        }catch (FileNotFoundException ex) {
+            System.out.println("Path for the Script is not correct");
+        }catch (IOException ex) {
+            System.out.println("Path for the Script is not correct");
+        }
         
         if(true) printJson();
     }
     
     public void printJson(){
             System.out.println(this.prefix);
+            System.out.println("Activities:");
             for (int i = 0; i < this.activities.size(); i++) {
                 System.out.println(this.activities.get(i));
             }
+            System.out.println("Entities:");
             for (int i = 0; i < this.entities.size(); i++) {
                 System.out.println(this.entities.get(i));
             }
+            System.out.println("WasInformedBy:");
             for (int i = 0; i < this.informedBy.size(); i++) {
                 System.out.println(this.informedBy.get(i));
             }
+            System.out.println("WasGeneratedBy:");
             for (int i = 0; i < this.generatedBy.size(); i++) {
                 System.out.println(this.generatedBy.get(i));
             }
+            System.out.println("UsedBy:");
             for (int i = 0; i < this.used.size(); i++) {
                 System.out.println(this.used.get(i));
             }
+            System.out.println("Output Script:");
             for (int i = 0; i < this.lines.size(); i++) {
                 System.out.println(this.lines.get(i));
             }
+    }
+    
+    //Managing Activities
+    public void manageActivities(){
+        
+        lines.add(0, "#@BEGIN "+activities.get(0).name.substring(0, activities.get(0).name.length()-1));
+        incrementOffset(0);
+        lines.add(lines.size(), "#@END "+activities.get(activities.size()-1).name.substring(0, activities.get(activities.size()-1).name.length()-1));
+        LinkedList<String> pilha = new LinkedList<>();
+        for (int i = 1; i < activities.size()-1; i++) {
+            if ("Start".equals(activities.get(i).type)) {
+                if(activities.get(i).startLine!=Activity.NA){
+                    lines.add((int)(activities.get(i).startLine+activities.get(i).offset-1), "#@BEGIN "+activities.get(i).name);
+                    incrementOffset(i-1);
+                    lines.add((int)(activities.get(i).endLine+activities.get(i).offset), "#@END "+activities.get(i).name);
+                    incrementOffset(i);
+                }else if("Operation".equals(activities.get(i+1).type)){
+                    lines.add((int)(activities.get(i+1).startLine+activities.get(i+1).offset-1), "#@BEGIN "+activities.get(i).name);
+                    incrementOffset(i-1);
+                    pilha.push(activities.get(i).name);
+                }
+            } else if ("Finish".equals(activities.get(i).type)){
+                if (!pilha.isEmpty() && pilha.peek().equals(activities.get(i).name)) {
+                    lines.add((int)(activities.get(i-1).endLine+activities.get(i-1).offset), "#@END "+activities.get(i).name);
+                    incrementOffset(i);
+                }
+            }
+        }
+    }
+    /**
+     * This function increments the offset of all activities after the one with id 'id'.
+     * This is useful since after adding a annotation, all lines in the activities after that line have to be incremented.
+     */
+    private void incrementOffset(int id){
+        for (int i = id+1; i < activities.size(); i++){
+            if(activities.get(i).startLine!=Activity.NA) activities.get(i).offset++;
+        }
     }
     
 }

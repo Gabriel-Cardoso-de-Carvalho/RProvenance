@@ -22,6 +22,7 @@ public class Activity {
     public long startCol;
     public long endCol;
     public long endLine;
+    public int offset = 0;
 
     public Activity(String id, String name, String type, double elapsedTime, long scriptNum, long startLine, long startCol, long endCol, long endLine) {
         this.id = id;
@@ -62,7 +63,7 @@ public class Activity {
     
     @Override
     public String toString(){
-        return "id = "+id+"\n\tname = " + name + "\n\ttype = " + type + "\n\telapsedTime = " + elapsedTime + "\n\tscriptNum = " + scriptNum +
+        return "id = "+id+" offset: "+offset+"\n\tname = " + name + "\n\ttype = " + type + "\n\telapsedTime = " + elapsedTime + "\n\tscriptNum = " + scriptNum +
                 "\n\tstartLine = " + startLine + "\n\tstartCol = " + startCol + "\n\tendLine = " + endLine + "\n\tendCol = " + endCol;
     }
     
