@@ -322,25 +322,25 @@ public class ParseJson {
     //Managing Activities
     public void manageActivities(){
         
-        lines.add(0, "#@BEGIN "+activities.get(0).name.substring(0, activities.get(0).name.length()-1));
+        lines.add(0, "#@BEGIN "+activities.get(0).name.substring(0, activities.get(0).name.length()-2).replace(" ", "_"));
         incrementOffset(0);
-        lines.add(lines.size(), "#@END "+activities.get(activities.size()-1).name.substring(0, activities.get(activities.size()-1).name.length()-1));
+        lines.add(lines.size(), "#@END "+activities.get(activities.size()-1).name.substring(0, activities.get(activities.size()-1).name.length()-2).replace(" ", "_"));
         LinkedList<String> pilha = new LinkedList<>();
         for (int i = 1; i < activities.size()-1; i++) {
             if ("Start".equals(activities.get(i).type)) {
                 if(activities.get(i).startLine!=Activity.NA){
-                    lines.add((int)(activities.get(i).startLine+activities.get(i).offset-1), "#@BEGIN "+activities.get(i).name);
+                    lines.add((int)(activities.get(i).startLine+activities.get(i).offset-1), "#@BEGIN "+activities.get(i).name.replace(" ", "_"));
                     incrementOffset(i-1);
-                    lines.add((int)(activities.get(i).endLine+activities.get(i).offset), "#@END "+activities.get(i).name);
+                    lines.add((int)(activities.get(i).endLine+activities.get(i).offset), "#@END "+activities.get(i).name.replace(" ", "_"));
                     incrementOffset(i);
                 }else if("Operation".equals(activities.get(i+1).type)){
-                    lines.add((int)(activities.get(i+1).startLine+activities.get(i+1).offset-1), "#@BEGIN "+activities.get(i).name);
+                    lines.add((int)(activities.get(i+1).startLine+activities.get(i+1).offset-1), "#@BEGIN "+activities.get(i).name.replace(" ", "_"));
                     incrementOffset(i-1);
                     pilha.push(activities.get(i).name);
                 }
             } else if ("Finish".equals(activities.get(i).type)){
                 if (!pilha.isEmpty() && pilha.peek().equals(activities.get(i).name)) {
-                    lines.add((int)(activities.get(i-1).endLine+activities.get(i-1).offset), "#@END "+activities.get(i).name);
+                    lines.add((int)(activities.get(i-1).endLine+activities.get(i-1).offset), "#@END "+activities.get(i).name.replace(" ", "_"));
                     incrementOffset(i);
                 }
             }

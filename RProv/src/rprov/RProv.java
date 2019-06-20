@@ -17,7 +17,7 @@ public class RProv {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new ParseJson("C:\\Users\\Frog33\\Documents\\git\\RProvenance\\scriptTests\\basicTest\\provenance_basicTest\\prov.json","C:\\Users\\Frog33\\Documents\\git\\RProvenance\\scriptTests\\basicTest\\basicTest.R");
+        new ParseJson("C:\\Users\\Gaburieru\\Documents\\git\\RProvenance\\scriptTests\\basicTest\\provenance_basicTest\\prov.json","C:\\Users\\Gaburieru\\Documents\\git\\RProvenance\\scriptTests\\basicTest\\basicTest.R");
     }
     
 }
