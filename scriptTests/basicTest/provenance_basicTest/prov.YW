@@ -1,4 +1,4 @@
-#@BEGIN basicTest
+#@BEGIN basicTes
 # Tests of ddg functions.  No useful computation here.
 # This test should not produce any errors and does not use 
 # files or snapshots so that ddg text files can be easily 
@@ -36,6 +36,11 @@ y <- NULL
 
 # Test function call
 #@BEGIN val_<-_f(w,_x,_y,_z,_x_+_1,_vector())
+#@IN w
+#@IN x
+#@IN y
+#@IN z
+#@OUT val
 val <- f(w, x, y, z,  x + 1, vector())
 #@END val_<-_f(w,_x,_y,_z,_x_+_1,_vector())
 x <- g(10)
@@ -69,4 +74,4 @@ tryCatch (
 data <- read.csv( './data/x.csv' , header = FALSE )
 apply(data,2,sum)
 prov.quit()
-#@END basicTest
+#@END basicTes

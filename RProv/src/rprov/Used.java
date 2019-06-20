@@ -5,6 +5,8 @@
  */
 package rprov;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author Gaburieru
@@ -30,5 +32,12 @@ public class Used {
         return "id = "+id+"\n\tentity = " + b + "\n\tactivity = " + a;
     }    
     
-    
+        
+    public static LinkedList<Entity> usados(LinkedList<Used> used, Activity a ){
+        LinkedList<Entity> result = new LinkedList<>();
+        for (int i = 0; i < used.size(); i++) {
+            if (used.get(i).activity.equals(a)) result.add(used.get(i).entity);
+        }
+        return result;
+    }
 }

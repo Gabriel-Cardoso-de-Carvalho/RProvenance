@@ -153,7 +153,7 @@ public class ParseJson {
                                                 token = tokenizer.nextToken();
                                                 name = tokenizer.sval;
                                                 break;
-                                            case "rdt:type":
+                                            case "rdt:valType":
                                                 token = tokenizer.nextToken();
                                                 type = tokenizer.sval;
                                                 break;
@@ -329,17 +329,35 @@ public class ParseJson {
         for (int i = 1; i < activities.size()-1; i++) {
             if ("Start".equals(activities.get(i).type)) {
                 if(activities.get(i).startLine!=Activity.NA){
+                    //Coloca anotação #@BEGIN <nome da função>
                     lines.add((int)(activities.get(i).startLine+activities.get(i).offset-1), "#@BEGIN "+activities.get(i).name.replace(" ", "_"));
                     incrementOffset(i-1);
-                    lines.add((int)(activities.get(i).endLine+activities.get(i).offset), "#@END "+activities.get(i).name.replace(" ", "_"));
-                    incrementOffset(i);
+                    //Coloca todos os #@IN <variável de entrada>
+                    LinkedList<Entity> usados = Used.usados(this.used, activities.get(i));
+                    for (int j = 0; j < usados.size(); j++) {
+                        System.out.println(usados.get(j));
+                        if(!"function".equals(usados.get(j).type)){
+                            lines.add((int)(activities.get(i).startLine+activities.get(i).offset-1), "#@IN "+usados.get(j).name);
+                            incrementOffset(i-1);
+                        }
+                    }
                 }else if("Operation".equals(activities.get(i+1).type)){
                     lines.add((int)(activities.get(i+1).startLine+activities.get(i+1).offset-1), "#@BEGIN "+activities.get(i).name.replace(" ", "_"));
                     incrementOffset(i-1);
                     pilha.push(activities.get(i).name);
                 }
             } else if ("Finish".equals(activities.get(i).type)){
-                if (!pilha.isEmpty() && pilha.peek().equals(activities.get(i).name)) {
+                if(activities.get(i).startLine!=Activity.NA){
+                    //Coloca anotação #@END <nome da função>
+                    lines.add((int)(activities.get(i).endLine+activities.get(i).offset), "#@END "+activities.get(i).name.replace(" ", "_"));
+                    incrementOffset(i);
+                    //Coloca todos os #@OUT <variável de entrada>
+                    LinkedList<Entity> gerados = WasGeneratedBy.gerados(this.generatedBy, activities.get(i));
+                    for (int j = 0; j < gerados.size(); j++) {
+                        lines.add((int)(activities.get(i).startLine+activities.get(i).offset-1), "#@OUT "+gerados.get(j).name);
+                        incrementOffset(i-1);
+                    }
+                }else if (!pilha.isEmpty() && pilha.peek().equals(activities.get(i).name)) {
                     lines.add((int)(activities.get(i-1).endLine+activities.get(i-1).offset), "#@END "+activities.get(i).name.replace(" ", "_"));
                     incrementOffset(i);
                 }

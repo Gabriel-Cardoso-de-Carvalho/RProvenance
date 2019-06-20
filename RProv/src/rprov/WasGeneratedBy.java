@@ -5,6 +5,8 @@
  */
 package rprov;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author Gaburieru
@@ -29,5 +31,13 @@ public class WasGeneratedBy {
         else b = entity.id;
         return "id = "+id+"\n\tactivity = " + a + "\n\tentity = " + b;
     } 
+        
+    public static LinkedList<Entity> gerados(LinkedList<WasGeneratedBy> generatedBy, Activity a ){
+        LinkedList<Entity> result = new LinkedList<>();
+        for (int i = 0; i < generatedBy.size(); i++) {
+            if (generatedBy.get(i).activity.equals(a)) result.add(generatedBy.get(i).entity);
+        }
+        return result;
+    }
     
 }
