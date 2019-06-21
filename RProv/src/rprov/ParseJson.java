@@ -379,17 +379,21 @@ public class ParseJson {
             for (int j = 0; j < usados.size(); j++) {
                 //System.out.println(usados.get(j));
                 if(!"function".equals(usados.get(j).type)){
-                    lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1),
+                    if(!"Device".equals(usados.get(j).type)){
+                        lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1),
                             "#@IN "+usados.get(j).name);
                     incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
+                    }
                 }
             }
             //Coloca todos os #@OUT <variável de saída>
             LinkedList<Entity> gerados = WasGeneratedBy.gerados(this.generatedBy, atividadesFuncoes.get(i).activity);
             for (int j = 0; j < gerados.size(); j++) {
-                lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1), 
+                if(!"Device".equals(gerados.get(j).type)){
+                    lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1), 
                         "#@OUT "+gerados.get(j).name);
-                incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
+                    incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
+                }
             }
             //Adiciona #@END
             lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset), 

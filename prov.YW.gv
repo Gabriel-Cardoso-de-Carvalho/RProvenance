@@ -1,0 +1,18 @@
+digraph Workflow {
+rankdir=LR
+fontname=Courier; fontsize=18; labelloc=t
+label=basicTes
+subgraph cluster_workflow_box_outer { label=""; color=black; penwidth=2
+subgraph cluster_workflow_box_inner { label=""; color=white
+node[shape=box style=filled fillcolor="#CCFFCC" peripheries=1 fontname=Courier]
+"val_<-_f(w,_x,_y,_z,_x_+_1,_vector())"
+g
+readcsv
+writecsv
+pdf
+plot
+devoff
+edge[fontname=Helvetica]
+"val_<-_f(w,_x,_y,_z,_x_+_1,_vector())" -> g [label=val]
+}}
+}

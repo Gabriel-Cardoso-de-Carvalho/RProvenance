@@ -56,7 +56,6 @@ storage.mode(z) <- a
 # Test .ddg.start and .ddg.finish
 .ddg.start("File tests")
 # Test files and URLs
-#@BEGIN File_tests
 #@BEGIN readcsv
 #@IN http://harvardforestfasharvardedu/data/p00/hf000/hf000-01-daily-mcsv
 #@OUT datadf
@@ -82,7 +81,6 @@ plot (shortdata.df$airt, shortdata.df$prec)
 #@OUT airt-vs-precpdf
 dev.off()
 #@END devoff
-#@END File_tests
 .ddg.finish("File tests")
 
 # Test try-catch
