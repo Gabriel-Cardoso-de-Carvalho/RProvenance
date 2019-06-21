@@ -43,7 +43,10 @@ y <- NULL
 #@OUT val
 val <- f(w, x, y, z,  x + 1, vector())
 #@END val_<-_f(w,_x,_y,_z,_x_+_1,_vector())
+#@BEGIN g
+#@OUT x
 x <- g(10)
+#@END g
 
 # Use a function call on left side of assignment
 z <- 5
@@ -54,13 +57,35 @@ storage.mode(z) <- a
 .ddg.start("File tests")
 # Test files and URLs
 #@BEGIN File_tests
+#@BEGIN readcsv
+#@IN http://harvardforestfasharvardedu/data/p00/hf000/hf000-01-daily-mcsv
+#@OUT datadf
 data.df <- read.csv ("http://harvardforest.fas.harvard.edu/data/p00/hf000/hf000-01-daily-m.csv")
+#@END readcsv
+#@BEGIN readcsv
 if (FALSE) read.csv ("foo.csv")
+#@END readcsv
 shortdata.df <- data.df[1:100, ]
+#@BEGIN writecsv
+#@IN shortdatadf
+#@OUT shortdatacsv
 write.csv (shortdata.df, "shortdata.csv")
+#@END writecsv
+#@BEGIN pdf
+#@OUT dev2
 pdf("airt-vs-prec.pdf")
+#@END pdf
+#@BEGIN plot
+#@IN shortdatadf
+#@IN dev2
+#@OUT dev2
 plot (shortdata.df$airt, shortdata.df$prec)
+#@END plot
+#@BEGIN devoff
+#@IN dev2
+#@OUT airt-vs-precpdf
 dev.off()
+#@END devoff
 #@END File_tests
 .ddg.finish("File tests")
 
@@ -71,7 +96,11 @@ tryCatch (
 )
 
 # Test error
+#@BEGIN readcsv
+#@IN xcsv
+#@OUT data
 data <- read.csv( './data/x.csv' , header = FALSE )
+#@END readcsv
 apply(data,2,sum)
 prov.quit()
 #@END basicTes
