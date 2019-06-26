@@ -58,7 +58,7 @@ public class ParseJson {
             tokenizer.slashStarComments(true);
             
             int token = tokenizer.nextToken();
-            String id="",name="",type="",sn="",sl="",sc="",el="",ec="";
+            String id="",name="",valType="",type="",sn="",sl="",sc="",el="",ec="";
             String val="";
             double et=-1;
             Activity a=null,b=null;
@@ -104,7 +104,7 @@ public class ParseJson {
                                         name = tokenizer.sval;
                                     }else if("rdt:type".equals(tokenizer.sval)){
                                         token = tokenizer.nextToken();
-                                        type = tokenizer.sval;
+                                        valType = tokenizer.sval;
                                     }else if("rdt:elapsedTime".equals(tokenizer.sval)){
                                         token = tokenizer.nextToken();
                                         et = tokenizer.nval;
@@ -130,8 +130,8 @@ public class ParseJson {
                                         else ec = tokenizer.sval;
                                     }   
                                 }
-                                //System.out.println(id+" "+ name+" "+type+" "+et+" "+sn+" "+sl+" "+sc+" "+el+" "+ec);
-                                a = new Activity(id,name,type,et,sn,sl,sc,ec,el);
+                                //System.out.println(id+" "+ name+" "+valType+" "+et+" "+sn+" "+sl+" "+sc+" "+el+" "+ec);
+                                a = new Activity(id,name,valType,et,sn,sl,sc,ec,el);
                                 //System.out.println(a);
                                 this.activities.add(a);
                                 token = tokenizer.nextToken();
@@ -155,6 +155,10 @@ public class ParseJson {
                                                 break;
                                             case "rdt:valType":
                                                 token = tokenizer.nextToken();
+                                                valType = tokenizer.sval;
+                                                break;
+                                            case "rdt:type":
+                                                token = tokenizer.nextToken();
                                                 type = tokenizer.sval;
                                                 break;
                                             case "rdt:value":
@@ -165,9 +169,9 @@ public class ParseJson {
                                                 break;
                                         } 
                                     }
-                                    //System.out.println(id+" "+ name+" "+type+" "+et+" "+sn+" "+sl+" "+sc+" "+el+" "+ec);
+                                    //System.out.println(id+" "+ name+" "+valType+" "+et+" "+sn+" "+sl+" "+sc+" "+el+" "+ec);
                                     if((id.substring(0, 1)).equals("f")) e = new Entity(id,name);
-                                    else e = new Entity(id,name,val,type);
+                                    else e = new Entity(id,name,val,valType,type);
                                     //System.out.println(a);
                                     this.entities.add(e);
                                 }else{
@@ -257,8 +261,10 @@ public class ParseJson {
             
         } catch (FileNotFoundException ex) {
             System.out.println("File of provenance was not found");
+            System.exit(-1);
         } catch (IOException ex) {
-            System.out.println("IOException");
+            System.out.println("Other Problem");
+            System.exit(-1);
         }
         
         try{
@@ -273,7 +279,7 @@ public class ParseJson {
         
         //Process the parsed provenance
         
-        this.manageActivities();
+        this.manage();
                 
         try{
             PrintWriter fw = new PrintWriter(new FileWriter(json.getPath().substring(0, json.getPath().length()-5)+".YW"));
@@ -284,13 +290,145 @@ public class ParseJson {
             
         }catch (FileNotFoundException ex) {
             System.out.println("Path for the Script is not correct");
+            System.exit(-1);
         }catch (IOException ex) {
-            System.out.println("Path for the Script is not correct");
+            System.out.println("Other problem");
+            System.exit(-1);
         }
         
-        if(true) printJson();
+        if(false) printJson();
     }
     
+    //Managing all the atributions and uses
+    public void manage(){
+        
+        LinkedList<Entity> geradosPorFuncao = new LinkedList<>();
+        LinkedList<Entity> usadosPorFuncao = new LinkedList<>();
+        LinkedList<String> funcoes = new LinkedList<>();
+        LinkedList<String> nomes = new LinkedList<>();
+        
+        int controleEntrada = 1;
+        int controleSaida = 1;
+        
+        lines.add(0, "#@BEGIN "+activities.get(0).name.substring(0, activities.get(0).name.length()-2).replace(" ", "_"));
+        incrementOffset(0);
+        lines.add(lines.size(), "#@END "+activities.get(activities.size()-1).name.substring(0, activities.get(activities.size()-1).name.length()-2).replace(" ", "_"));
+        LinkedList<String> pilha = new LinkedList<>();
+        for (int i = 1; i < activities.size()-1; i++) {
+            //Caso esteja anotada a função
+            if ("Start".equals(activities.get(i).type)) {
+                if(activities.get(i).startLine!=Activity.NA){
+                    //Coloca todos os #@IN <variável de entrada>
+                    LinkedList<Entity> usados = Used.usados(this.used, activities.get(i));
+                    //Coloca anotação #@BEGIN <nome da função>
+                    if (usados.get(0).valType.equals("function")){
+                        lines.add((int)(activities.get(i).startLine+activities.get(i).offset-1), "\n#@BEGIN "+usados.get(0).name);
+                        funcoes.add(activities.get(i).name);
+                        nomes.add(usados.get(0).name);
+                    }else lines.add((int)(activities.get(i).startLine+activities.get(i).offset-1), "\n#@BEGIN "+activities.get(i).name.replace(" ", "_"));
+                    
+                    incrementOffset(i-1);
+                    
+                    for (int j = 0; j < usados.size(); j++) {
+                        //System.out.println(usados.get(j));
+                        if(!"function".equals(usados.get(j).valType)){
+                            lines.add((int)(activities.get(i).startLine+activities.get(i).offset-1), "#@IN "+usados.get(j).name);
+                            incrementOffset(i-1);
+                        }
+                    }
+                //Caso seja um "Start" gerado por .ddg.start()
+                }else if("Operation".equals(activities.get(i+1).type)){
+                    lines.add((int)(activities.get(i+1).startLine+activities.get(i+1).offset-1), "\n#@BEGIN "+activities.get(i).name.replace(" ", "_"));
+                    incrementOffset(i-1);
+                    pilha.push(activities.get(i).name);
+                }
+            } else if ("Finish".equals(activities.get(i).type)){
+                //Caso esteja anotada a função
+                if(activities.get(i).startLine!=Activity.NA){
+                    //Coloca anotação #@END <nome da função>
+                    if(funcoes.lastIndexOf(activities.get(i).name)!=-1) lines.add((int)(activities.get(i).endLine+activities.get(i).offset), "#@END "+nomes.get(funcoes.lastIndexOf(activities.get(i).name)));
+                    else lines.add((int)(activities.get(i).endLine+activities.get(i).offset), "#@END "+activities.get(i).name.replace(" ", "_"));
+                    //Coloca todos os #@OUT <variável de saída>
+                    LinkedList<Entity> gerados = WasGeneratedBy.gerados(this.generatedBy, activities.get(i));
+                    incrementOffset(i);
+                    for (int j = 0; j < gerados.size(); j++) {
+                        lines.add((int)(activities.get(i).startLine+activities.get(i).offset-1), "#@OUT "+gerados.get(j).name);
+                        incrementOffset(i-1);
+                    }
+                //Caso seja um "Start" gerado por .ddg.start()
+                }else if (!pilha.isEmpty() && pilha.peek().equals(activities.get(i).name)) {
+                    lines.add((int)(activities.get(i-1).endLine+activities.get(i-1).offset), "#@END "+activities.get(i).name.replace(" ", "_"));
+                    incrementOffset(i);
+                }
+            }
+        }
+        LinkedList<Used> atividadesFuncoes = Used.atividadesFuncoes(this.used);
+        for (int i = 0; i < atividadesFuncoes.size(); i++) {
+            //System.out.println(atividadesFuncoes.get(i).activity);
+            //Adiciona #@BEGIN
+            lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1), 
+                    "\n#@BEGIN "+atividadesFuncoes.get(i).entity.name);
+            incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
+            //Coloca todos os #@IN <variável de entrada>
+            LinkedList<Entity> usados = Used.usados(this.used, atividadesFuncoes.get(i).activity);
+            for (int j = 0; j < usados.size(); j++) {
+                usadosPorFuncao.add(usados.get(j));
+                //System.out.println(usados.get(j));
+                if(!"function".equals(usados.get(j).valType)){
+                    if("Device".equals(usados.get(j).valType)){
+                        lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1),
+                            "#@IN ctrl"+controleEntrada++);
+                        incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
+                        
+                    }else{
+                        lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1),
+                            "#@IN "+usados.get(j).name);
+                        incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
+                    }
+                }
+            }
+            //Coloca todos os #@OUT <variável de saída>
+            LinkedList<Entity> gerados = WasGeneratedBy.gerados(this.generatedBy, atividadesFuncoes.get(i).activity);//Entidades geradas pela atividade     
+            for (int j = 0; j < gerados.size(); j++) {
+                geradosPorFuncao.add(gerados.get(j));
+                if("Device".equals(gerados.get(j).valType)){
+                    lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1), 
+                        "#@OUT ctrl"+controleSaida++);
+                    incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
+                    
+                }else{
+                    lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1), 
+                        "#@OUT "+gerados.get(j).name);
+                    incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
+                }
+            }
+            //Adiciona #@END
+            lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset), 
+                    "#@END "+atividadesFuncoes.get(i).entity.name);
+            incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-1);
+        }
+        
+        //Entidades de entrada: os #@IN anotados no inicio do programa
+        LinkedList<Entity> entrada = Entity.usadosNaoGerados(usadosPorFuncao, generatedBy);
+        //Entidades de saida: os #@OUT anotados no inicio do programa
+        LinkedList<Entity> saida = Entity.geradosNaoUsados(geradosPorFuncao, used);
+        int offset = 1;
+        for (int i = 0; i < entrada.size(); i++) lines.add(offset++, "#@IN "+entrada.get(i).name);
+        
+        for (int i = 0; i < saida.size(); i++) lines.add(offset++, "#@OUT "+saida.get(i).name);
+    }
+    
+    /**
+     * This function increments the offset of all activities after the one with id 'id'.
+     * This is useful since after adding a annotation, all lines in the activities after that line have to be incremented.
+     */
+    private void incrementOffset(int id){
+        for (int i = id+1; i < activities.size(); i++){
+            if(activities.get(i).startLine!=Activity.NA) activities.get(i).offset++;
+        }
+    }
+    
+        
     public void printJson(){
             System.out.println(this.prefix);
             System.out.println("Activities:");
@@ -318,97 +456,4 @@ public class ParseJson {
                 System.out.println(this.lines.get(i));
             }
     }
-    
-    //Managing Activities
-    public void manageActivities(){
-        
-        lines.add(0, "#@BEGIN "+activities.get(0).name.substring(0, activities.get(0).name.length()-2).replace(" ", "_"));
-        incrementOffset(0);
-        lines.add(lines.size(), "#@END "+activities.get(activities.size()-1).name.substring(0, activities.get(activities.size()-1).name.length()-2).replace(" ", "_"));
-        LinkedList<String> pilha = new LinkedList<>();
-        for (int i = 1; i < activities.size()-1; i++) {
-            //Caso esteja anotada a função
-            if ("Start".equals(activities.get(i).type)) {
-                if(activities.get(i).startLine!=Activity.NA){
-                    //Coloca anotação #@BEGIN <nome da função>
-                    lines.add((int)(activities.get(i).startLine+activities.get(i).offset-1), "#@BEGIN "+activities.get(i).name.replace(" ", "_"));
-                    incrementOffset(i-1);
-                    //Coloca todos os #@IN <variável de entrada>
-                    LinkedList<Entity> usados = Used.usados(this.used, activities.get(i));
-                    for (int j = 0; j < usados.size(); j++) {
-                        //System.out.println(usados.get(j));
-                        if(!"function".equals(usados.get(j).type)){
-                            lines.add((int)(activities.get(i).startLine+activities.get(i).offset-1), "#@IN "+usados.get(j).name);
-                            incrementOffset(i-1);
-                        }
-                    }
-                //Caso seja um "Start" gerado por .ddg.start()
-                }else if("Operation".equals(activities.get(i+1).type)){
-                    lines.add((int)(activities.get(i+1).startLine+activities.get(i+1).offset-1), "#@BEGIN "+activities.get(i).name.replace(" ", "_"));
-                    incrementOffset(i-1);
-                    pilha.push(activities.get(i).name);
-                }
-            } else if ("Finish".equals(activities.get(i).type)){
-                //Caso esteja anotada a função
-                if(activities.get(i).startLine!=Activity.NA){
-                    //Coloca anotação #@END <nome da função>
-                    lines.add((int)(activities.get(i).endLine+activities.get(i).offset), "#@END "+activities.get(i).name.replace(" ", "_"));
-                    incrementOffset(i);
-                    //Coloca todos os #@OUT <variável de saída>
-                    LinkedList<Entity> gerados = WasGeneratedBy.gerados(this.generatedBy, activities.get(i));
-                    for (int j = 0; j < gerados.size(); j++) {
-                        lines.add((int)(activities.get(i).startLine+activities.get(i).offset-1), "#@OUT "+gerados.get(j).name);
-                        incrementOffset(i-1);
-                    }
-                //Caso seja um "Start" gerado por .ddg.start()
-                }else if (!pilha.isEmpty() && pilha.peek().equals(activities.get(i).name)) {
-                    lines.add((int)(activities.get(i-1).endLine+activities.get(i-1).offset), "#@END "+activities.get(i).name.replace(" ", "_"));
-                    incrementOffset(i);
-                }
-            }
-        }
-        LinkedList<Used> atividadesFuncoes = Used.atividadesFuncoes(this.used);
-        for (int i = 0; i < atividadesFuncoes.size(); i++) {
-            //System.out.println(atividadesFuncoes.get(i).activity);
-            //Adiciona #@BEGIN
-            lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1), 
-                    "#@BEGIN "+atividadesFuncoes.get(i).entity.name);
-            incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
-            //Coloca todos os #@IN <variável de entrada>
-            LinkedList<Entity> usados = Used.usados(this.used, atividadesFuncoes.get(i).activity);
-            for (int j = 0; j < usados.size(); j++) {
-                //System.out.println(usados.get(j));
-                if(!"function".equals(usados.get(j).type)){
-                    if(!"Device".equals(usados.get(j).type)){
-                        lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1),
-                            "#@IN "+usados.get(j).name);
-                    incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
-                    }
-                }
-            }
-            //Coloca todos os #@OUT <variável de saída>
-            LinkedList<Entity> gerados = WasGeneratedBy.gerados(this.generatedBy, atividadesFuncoes.get(i).activity);
-            for (int j = 0; j < gerados.size(); j++) {
-                if(!"Device".equals(gerados.get(j).type)){
-                    lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1), 
-                        "#@OUT "+gerados.get(j).name);
-                    incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
-                }
-            }
-            //Adiciona #@END
-            lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset), 
-                    "#@END "+atividadesFuncoes.get(i).entity.name);
-            incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-1);
-        }
-    }
-    /**
-     * This function increments the offset of all activities after the one with id 'id'.
-     * This is useful since after adding a annotation, all lines in the activities after that line have to be incremented.
-     */
-    private void incrementOffset(int id){
-        for (int i = id+1; i < activities.size(); i++){
-            if(activities.get(i).startLine!=Activity.NA) activities.get(i).offset++;
-        }
-    }
-    
 }

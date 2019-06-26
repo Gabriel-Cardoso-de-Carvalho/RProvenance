@@ -44,7 +44,7 @@ public class Used {
     public static LinkedList<Used> atividadesFuncoes(LinkedList<Used> used){
         LinkedList<Used> result = new LinkedList<>();
         for (int i = 0; i < used.size(); i++) {
-            if ("function".equals(used.get(i).entity.type) && !(used.get(i).activity.startLine == Activity.NA) 
+            if ("function".equals(used.get(i).entity.valType) && !(used.get(i).activity.startLine == Activity.NA) 
                     && "Operation".equals(used.get(i).activity.type)) result.add(used.get(i));
         }
         return result;

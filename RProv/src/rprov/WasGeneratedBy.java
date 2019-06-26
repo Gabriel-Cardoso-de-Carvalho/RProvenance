@@ -31,7 +31,9 @@ public class WasGeneratedBy {
         else b = entity.id;
         return "id = "+id+"\n\tactivity = " + a + "\n\tentity = " + b;
     } 
-        
+    /**
+     * Lista de Entidades geradas pela Atividade a
+     */
     public static LinkedList<Entity> gerados(LinkedList<WasGeneratedBy> generatedBy, Activity a ){
         LinkedList<Entity> result = new LinkedList<>();
         for (int i = 0; i < generatedBy.size(); i++) {
@@ -39,5 +41,6 @@ public class WasGeneratedBy {
         }
         return result;
     }
+
     
 }

@@ -1,0 +1,3 @@
+tipo_diretorio,diretorios
+diretorio_dados,C:/Users/Gaburieru/Documents/Git/RProvenance/Fatorial/dados/
+diretorio_saida,C:/Users/Gaburieru/Documents/Git/RProvenance/Fatorial/saida/

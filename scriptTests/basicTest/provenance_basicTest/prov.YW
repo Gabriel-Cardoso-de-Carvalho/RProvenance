@@ -1,4 +1,9 @@
-#@BEGIN basicTes
+#@BEGIN basicTest
+#@IN http://harvardforest.fas.harvard.edu/data/p00/hf000/hf000-01-daily-m.csv
+#@IN x.csv
+#@OUT x
+#@OUT shortdata.csv
+#@OUT airt-vs-prec.pdf
 # Tests of ddg functions.  No useful computation here.
 # This test should not produce any errors and does not use 
 # files or snapshots so that ddg text files can be easily 
@@ -35,14 +40,16 @@ x <- NA
 y <- NULL
 
 # Test function call
-#@BEGIN val_<-_f(w,_x,_y,_z,_x_+_1,_vector())
+
+#@BEGIN f
 #@IN w
 #@IN x
 #@IN y
 #@IN z
 #@OUT val
 val <- f(w, x, y, z,  x + 1, vector())
-#@END val_<-_f(w,_x,_y,_z,_x_+_1,_vector())
+#@END f
+
 #@BEGIN g
 #@OUT x
 x <- g(10)
@@ -54,36 +61,44 @@ a <- "character"
 storage.mode(z) <- a
 
 # Test .ddg.start and .ddg.finish
-.ddg.start("File tests")
+#.ddg.start("File tests")
 # Test files and URLs
-#@BEGIN File_tests
-#@BEGIN readcsv
-#@IN http://harvardforestfasharvardedu/data/p00/hf000/hf000-01-daily-mcsv
-#@OUT datadf
+
+#@BEGIN read.csv
+#@IN http://harvardforest.fas.harvard.edu/data/p00/hf000/hf000-01-daily-m.csv
+#@OUT data.df
 data.df <- read.csv ("http://harvardforest.fas.harvard.edu/data/p00/hf000/hf000-01-daily-m.csv")
-#@END readcsv
-#@BEGIN readcsv
+#@END read.csv
+
+#@BEGIN read.csv
 if (FALSE) read.csv ("foo.csv")
-#@END readcsv
+#@END read.csv
 shortdata.df <- data.df[1:100, ]
-#@BEGIN writecsv
-#@IN shortdatadf
-#@OUT shortdatacsv
+
+#@BEGIN write.csv
+#@IN shortdata.df
+#@OUT shortdata.csv
 write.csv (shortdata.df, "shortdata.csv")
-#@END writecsv
+#@END write.csv
+
 #@BEGIN pdf
+#@OUT ctrl1
 pdf("airt-vs-prec.pdf")
 #@END pdf
+
 #@BEGIN plot
-#@IN shortdatadf
+#@IN shortdata.df
+#@IN ctrl1
+#@OUT ctrl2
 plot (shortdata.df$airt, shortdata.df$prec)
 #@END plot
-#@BEGIN devoff
-#@OUT airt-vs-precpdf
+
+#@BEGIN dev.off
+#@IN ctrl2
+#@OUT airt-vs-prec.pdf
 dev.off()
-#@END devoff
-#@END File_tests
-.ddg.finish("File tests")
+#@END dev.off
+#.ddg.finish("File tests")
 
 # Test try-catch
 tryCatch (
@@ -92,11 +107,12 @@ tryCatch (
 )
 
 # Test error
-#@BEGIN readcsv
-#@IN xcsv
+
+#@BEGIN read.csv
+#@IN x.csv
 #@OUT data
 data <- read.csv( './data/x.csv' , header = FALSE )
-#@END readcsv
+#@END read.csv
 apply(data,2,sum)
 prov.quit()
-#@END basicTes
+#@END basicTest

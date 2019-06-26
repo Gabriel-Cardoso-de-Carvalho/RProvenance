@@ -1,38 +1,38 @@
 digraph Workflow {
 rankdir=LR
 fontname=Courier; fontsize=18; labelloc=t
-label=basicTest
+label=Experimento
 subgraph cluster_workflow_box_outer { label=""; color=black; penwidth=2
 subgraph cluster_workflow_box_inner { label=""; color=white
 node[shape=box style=filled fillcolor="#CCFFCC" peripheries=1 fontname=Courier]
-f
-g
 "read.csv"
+fatorial
+fibonacci
 "write.csv"
-pdf
-plot
-"dev.off"
 edge[fontname=Helvetica]
-g -> f [label=x]
-pdf -> plot [label=ctrl1]
-plot -> "dev.off" [label=ctrl2]
+"read.csv" -> "read.csv" [label=diretorio]
+"read.csv" -> "write.csv" [label=diretorio]
+"read.csv" -> fatorial [label=dados]
+"read.csv" -> fibonacci [label=dados]
+fatorial -> "write.csv" [label=x]
+fibonacci -> "write.csv" [label=y]
 }}
 subgraph cluster_input_ports_group_outer { label=""; color=white
 subgraph cluster_input_ports_group_inner { label=""; color=white
 node[shape=circle style=filled fillcolor="#FFFFFF" peripheries=1 fontname=Courier width=0.2]
-"http://harvardforest.fas.harvard.edu/data/p00/hf000/hf000-01-daily-m.csv_input_port" [label=""]
-"x.csv_input_port" [label=""]
+"config.txt_input_port" [label=""]
+"entrada.csv_input_port" [label=""]
 }}
 subgraph cluster_output_ports_group_outer { label=""; color=white
 subgraph cluster_output_ports_group_inner { label=""; color=white
 node[shape=circle style=filled fillcolor="#FFFFFF" peripheries=1 fontname=Courier width=0.2]
-"shortdata.csv_output_port" [label=""]
-"airt-vs-prec.pdf_output_port" [label=""]
+"fatorial.csv_output_port" [label=""]
+"fibonacci.csv_output_port" [label=""]
 }}
 edge[fontname=Helvetica]
-"http://harvardforest.fas.harvard.edu/data/p00/hf000/hf000-01-daily-m.csv_input_port" -> "read.csv" [label="http://harvardforest.fas.harvard.edu/data/p00/hf000/hf000-01-daily-m.csv"]
-"x.csv_input_port" -> "read.csv" [label="x.csv"]
+"config.txt_input_port" -> "read.csv" [label="config.txt"]
+"entrada.csv_input_port" -> "read.csv" [label="entrada.csv"]
 edge[fontname=Helvetica]
-"write.csv" -> "shortdata.csv_output_port" [label="shortdata.csv"]
-"dev.off" -> "airt-vs-prec.pdf_output_port" [label="airt-vs-prec.pdf"]
+"write.csv" -> "fatorial.csv_output_port" [label="fatorial.csv"]
+"write.csv" -> "fibonacci.csv_output_port" [label="fibonacci.csv"]
 }

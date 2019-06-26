@@ -43,16 +43,17 @@ a <- "character"
 storage.mode(z) <- a
 
 # Test .ddg.start and .ddg.finish
-.ddg.start("File tests")
+#.ddg.start("File tests")
 # Test files and URLs
 data.df <- read.csv ("http://harvardforest.fas.harvard.edu/data/p00/hf000/hf000-01-daily-m.csv")
+data.df
 if (FALSE) read.csv ("foo.csv")
 shortdata.df <- data.df[1:100, ]
 write.csv (shortdata.df, "shortdata.csv")
 pdf("airt-vs-prec.pdf")
 plot (shortdata.df$airt, shortdata.df$prec)
 dev.off()
-.ddg.finish("File tests")
+#.ddg.finish("File tests")
 
 # Test try-catch
 tryCatch (

@@ -1,0 +1,486 @@
+{
+	"prefix": {
+		"prov": "http://www.w3.org/ns/prov#",
+		"rdt": "https://github.com/End-to-end-provenance/ExtendedProvJson/blob/master/JSON-format.md"
+	},
+
+	"agent" : {
+		// agent: this json file and the tool that produced this
+		"rdt:a1": {
+			"rdt:tool.name": "rdt",
+			"rdt:tool.version": "3.0.3",
+			"rdt:json.version": "2.1"
+		}
+	},
+
+	"activity" : {
+		// procedure nodes
+		"rdt:p1": {
+			"rdt:name": "Experimento.R",
+			"rdt:type": "Start",
+			"rdt:elapsedTime": 3.42,
+			"rdt:scriptNum": "NA",
+			"rdt:startLine": "NA",
+			"rdt:startCol": "NA",
+			"rdt:endLine": "NA",
+			"rdt:endCol": "NA"
+		},
+		"rdt:p2": {
+			"rdt:name": "fatorial <- function(v) {\tresultado <- v\tfor (val in 1",
+			"rdt:type": "Operation",
+			"rdt:elapsedTime": 3.54,
+			"rdt:scriptNum": 1,
+			"rdt:startLine": 2,
+			"rdt:startCol": 1,
+			"rdt:endLine": 17,
+			"rdt:endCol": 1
+		},
+		"rdt:p3": {
+			"rdt:name": "fibonacci <- function(v) {\tresultado <- v\tfor (val in ",
+			"rdt:type": "Operation",
+			"rdt:elapsedTime": 3.54,
+			"rdt:scriptNum": 1,
+			"rdt:startLine": 20,
+			"rdt:startCol": 1,
+			"rdt:endLine": 42,
+			"rdt:endCol": 1
+		},
+		"rdt:p4": {
+			"rdt:name": "diretorio <- read.csv(\"C:/Users/Gaburieru/Documents/Git/RPro",
+			"rdt:type": "Operation",
+			"rdt:elapsedTime": 3.95,
+			"rdt:scriptNum": 1,
+			"rdt:startLine": 44,
+			"rdt:startCol": 1,
+			"rdt:endLine": 44,
+			"rdt:endCol": 89
+		},
+		"rdt:p5": {
+			"rdt:name": "dados <- read.csv(paste(diretorio[1, 2], \"entrada.csv\", sep ",
+			"rdt:type": "Operation",
+			"rdt:elapsedTime": 4.73,
+			"rdt:scriptNum": 1,
+			"rdt:startLine": 46,
+			"rdt:startCol": 1,
+			"rdt:endLine": 46,
+			"rdt:endCol": 63
+		},
+		"rdt:p6": {
+			"rdt:name": "x <- fatorial(dados)",
+			"rdt:type": "Operation",
+			"rdt:elapsedTime": 4.74,
+			"rdt:scriptNum": 1,
+			"rdt:startLine": 48,
+			"rdt:startCol": 1,
+			"rdt:endLine": 48,
+			"rdt:endCol": 20
+		},
+		"rdt:p7": {
+			"rdt:name": "y <- fibonacci(dados)",
+			"rdt:type": "Operation",
+			"rdt:elapsedTime": 4.76,
+			"rdt:scriptNum": 1,
+			"rdt:startLine": 49,
+			"rdt:startCol": 1,
+			"rdt:endLine": 49,
+			"rdt:endCol": 21
+		},
+		"rdt:p8": {
+			"rdt:name": "write.csv(x, paste(diretorio[2, 2], \"fatorial.csv\", sep = \"\"",
+			"rdt:type": "Operation",
+			"rdt:elapsedTime": 4.77,
+			"rdt:scriptNum": 1,
+			"rdt:startLine": 51,
+			"rdt:startCol": 1,
+			"rdt:endLine": 51,
+			"rdt:endCol": 58
+		},
+		"rdt:p9": {
+			"rdt:name": "write.csv(y, paste(diretorio[2, 2], \"fibonacci.csv\", sep = \"",
+			"rdt:type": "Operation",
+			"rdt:elapsedTime": 4.88,
+			"rdt:scriptNum": 1,
+			"rdt:startLine": 52,
+			"rdt:startCol": 1,
+			"rdt:endLine": 52,
+			"rdt:endCol": 59
+		},
+		"rdt:p10": {
+			"rdt:name": "Experimento.R",
+			"rdt:type": "Finish",
+			"rdt:elapsedTime": 4.9,
+			"rdt:scriptNum": "NA",
+			"rdt:startLine": "NA",
+			"rdt:startCol": "NA",
+			"rdt:endLine": "NA",
+			"rdt:endCol": "NA"
+		}
+	},
+
+	"entity" : {
+		// data nodes
+		"rdt:d1": {
+			"rdt:name": "fatorial",
+			"rdt:value": "function (v) ...",
+			"rdt:valType": "function",
+			"rdt:type": "Data",
+			"rdt:scope": "R_GlobalEnv",
+			"rdt:fromEnv": false,
+			"rdt:hash": "",
+			"rdt:timestamp": "",
+			"rdt:location": ""
+		},
+		"rdt:d2": {
+			"rdt:name": "fibonacci",
+			"rdt:value": "function (v) ...",
+			"rdt:valType": "function",
+			"rdt:type": "Data",
+			"rdt:scope": "R_GlobalEnv",
+			"rdt:fromEnv": false,
+			"rdt:hash": "",
+			"rdt:timestamp": "",
+			"rdt:location": ""
+		},
+		"rdt:d3": {
+			"rdt:name": "config.txt",
+			"rdt:value": "data/3-config.txt",
+			"rdt:valType": "{\"container\":\"vector\", \"dimension\":[1], \"type\":[\"character\"]}",
+			"rdt:type": "File",
+			"rdt:scope": "undefined",
+			"rdt:fromEnv": false,
+			"rdt:hash": "5e55bf6a49c8af4c00e1dc093023fbe5",
+			"rdt:timestamp": "2019-06-26T18.24.32-03",
+			"rdt:location": "C:/Users/Gaburieru/Documents/Git/RProvenance/Fatorial/config.txt"
+		},
+		"rdt:d4": {
+			"rdt:name": "diretorio",
+			"rdt:value": "Row 1 diretorio_dados",
+			"rdt:valType": "{\"container\":\"data_frame\", \"dimension\":[2,2], \"type\":[\"factor\",\"factor\"]}",
+			"rdt:type": "Data",
+			"rdt:scope": "R_GlobalEnv",
+			"rdt:fromEnv": false,
+			"rdt:hash": "",
+			"rdt:timestamp": "",
+			"rdt:location": ""
+		},
+		"rdt:d5": {
+			"rdt:name": "entrada.csv",
+			"rdt:value": "data/5-entrada.csv",
+			"rdt:valType": "{\"container\":\"vector\", \"dimension\":[1], \"type\":[\"character\"]}",
+			"rdt:type": "File",
+			"rdt:scope": "undefined",
+			"rdt:fromEnv": false,
+			"rdt:hash": "595e8c68646044b743cdbde7a4ea6bba",
+			"rdt:timestamp": "2019-06-26T18.24.33-03",
+			"rdt:location": "C:/Users/Gaburieru/Documents/Git/RProvenance/Fatorial/dados/entrada.csv"
+		},
+		"rdt:d6": {
+			"rdt:name": "dados",
+			"rdt:value": "1",
+			"rdt:valType": "{\"container\":\"data_frame\", \"dimension\":[8,1], \"type\":[\"integer\"]}",
+			"rdt:type": "Data",
+			"rdt:scope": "R_GlobalEnv",
+			"rdt:fromEnv": false,
+			"rdt:hash": "",
+			"rdt:timestamp": "",
+			"rdt:location": ""
+		},
+		"rdt:d7": {
+			"rdt:name": "x",
+			"rdt:value": "1",
+			"rdt:valType": "{\"container\":\"data_frame\", \"dimension\":[8,1], \"type\":[\"numeric\"]}",
+			"rdt:type": "Data",
+			"rdt:scope": "R_GlobalEnv",
+			"rdt:fromEnv": false,
+			"rdt:hash": "",
+			"rdt:timestamp": "",
+			"rdt:location": ""
+		},
+		"rdt:d8": {
+			"rdt:name": "y",
+			"rdt:value": "0",
+			"rdt:valType": "{\"container\":\"data_frame\", \"dimension\":[8,1], \"type\":[\"numeric\"]}",
+			"rdt:type": "Data",
+			"rdt:scope": "R_GlobalEnv",
+			"rdt:fromEnv": false,
+			"rdt:hash": "",
+			"rdt:timestamp": "",
+			"rdt:location": ""
+		},
+		"rdt:d9": {
+			"rdt:name": "fatorial.csv",
+			"rdt:value": "data/9-fatorial.csv",
+			"rdt:valType": "{\"container\":\"vector\", \"dimension\":[1], \"type\":[\"character\"]}",
+			"rdt:type": "File",
+			"rdt:scope": "undefined",
+			"rdt:fromEnv": false,
+			"rdt:hash": "c57422b3f1c0c4b10943d3a55d70ee1e",
+			"rdt:timestamp": "2019-06-26T18.24.33-03",
+			"rdt:location": "C:/Users/Gaburieru/Documents/Git/RProvenance/Fatorial/saida/fatorial.csv"
+		},
+		"rdt:d10": {
+			"rdt:name": "fibonacci.csv",
+			"rdt:value": "data/10-fibonacci.csv",
+			"rdt:valType": "{\"container\":\"vector\", \"dimension\":[1], \"type\":[\"character\"]}",
+			"rdt:type": "File",
+			"rdt:scope": "undefined",
+			"rdt:fromEnv": false,
+			"rdt:hash": "2230f958d0c1b87598855d6909d16704",
+			"rdt:timestamp": "2019-06-26T18.24.33-03",
+			"rdt:location": "C:/Users/Gaburieru/Documents/Git/RProvenance/Fatorial/saida/fibonacci.csv"
+		},
+
+		// environment
+		"rdt:environment": {
+			"rdt:name": "environment",
+			"rdt:architecture": "x86_64",
+			"rdt:operatingSystem": "mingw32",
+			"rdt:language": "R",
+			"rdt:langVersion": "R version 3.6.0 (2019-04-26)",
+			"rdt:script": "C:/Users/Gaburieru/Documents/Git/RProvenance/Fatorial/Experimento.R",
+			"rdt:scriptTimeStamp": "2019-06-26T18.22.34-03",
+			"rdt:sourcedScripts": "",
+			"rdt:sourcedScriptTimeStamps": "",
+			"rdt:workingDirectory": "C:/Users/Gaburieru/Documents/Git/RProvenance/Fatorial",
+			"rdt:provDirectory": "C:/Users/Gaburieru/Documents/Git/RProvenance/Fatorial/prov_Experimento",
+			"rdt:provTimestamp": "2019-06-26T18.24.30-03",
+			"rdt:hashAlgorithm": "md5"
+		},
+
+		// library nodes - prov collections
+		"rdt:l1": {
+			"name": "base",
+			"version": "3.6.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l2": {
+			"name": "datasets",
+			"version": "3.6.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l3": {
+			"name": "ggplot2",
+			"version": "3.1.1",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l4": {
+			"name": "graphics",
+			"version": "3.6.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l5": {
+			"name": "grDevices",
+			"version": "3.6.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l6": {
+			"name": "methods",
+			"version": "3.6.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l7": {
+			"name": "rdt",
+			"version": "3.0.3",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l8": {
+			"name": "stats",
+			"version": "3.6.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l9": {
+			"name": "utils",
+			"version": "3.6.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+
+		// function nodes
+		"rdt:f1": {
+			"name": "read.csv"
+		},
+		"rdt:f2": {
+			"name": "write.csv"
+		}
+	},
+
+	"wasInformedBy" : {
+		// procedure-to-procedure edges
+		"rdt:pp1": {
+			"prov:informant": "rdt:p1",
+			"prov:informed": "rdt:p2"
+		},
+		"rdt:pp2": {
+			"prov:informant": "rdt:p2",
+			"prov:informed": "rdt:p3"
+		},
+		"rdt:pp3": {
+			"prov:informant": "rdt:p3",
+			"prov:informed": "rdt:p4"
+		},
+		"rdt:pp4": {
+			"prov:informant": "rdt:p4",
+			"prov:informed": "rdt:p5"
+		},
+		"rdt:pp5": {
+			"prov:informant": "rdt:p5",
+			"prov:informed": "rdt:p6"
+		},
+		"rdt:pp6": {
+			"prov:informant": "rdt:p6",
+			"prov:informed": "rdt:p7"
+		},
+		"rdt:pp7": {
+			"prov:informant": "rdt:p7",
+			"prov:informed": "rdt:p8"
+		},
+		"rdt:pp8": {
+			"prov:informant": "rdt:p8",
+			"prov:informed": "rdt:p9"
+		},
+		"rdt:pp9": {
+			"prov:informant": "rdt:p9",
+			"prov:informed": "rdt:p10"
+		}
+	},
+
+	"wasGeneratedBy" : {
+		// procedure-to-data edges
+		"rdt:pd1": {
+			"prov:activity": "rdt:p2",
+			"prov:entity": "rdt:d1"
+		},
+		"rdt:pd2": {
+			"prov:activity": "rdt:p3",
+			"prov:entity": "rdt:d2"
+		},
+		"rdt:pd3": {
+			"prov:activity": "rdt:p4",
+			"prov:entity": "rdt:d4"
+		},
+		"rdt:pd4": {
+			"prov:activity": "rdt:p5",
+			"prov:entity": "rdt:d6"
+		},
+		"rdt:pd5": {
+			"prov:activity": "rdt:p6",
+			"prov:entity": "rdt:d7"
+		},
+		"rdt:pd6": {
+			"prov:activity": "rdt:p7",
+			"prov:entity": "rdt:d8"
+		},
+		"rdt:pd7": {
+			"prov:activity": "rdt:p8",
+			"prov:entity": "rdt:d9"
+		},
+		"rdt:pd8": {
+			"prov:activity": "rdt:p9",
+			"prov:entity": "rdt:d10"
+		}
+	},
+
+	"used" : {
+		// data-to-procedure edges
+		"rdt:dp1": {
+			"prov:entity": "rdt:d3",
+			"prov:activity": "rdt:p4"
+		},
+		"rdt:dp2": {
+			"prov:entity": "rdt:d4",
+			"prov:activity": "rdt:p5"
+		},
+		"rdt:dp3": {
+			"prov:entity": "rdt:d5",
+			"prov:activity": "rdt:p5"
+		},
+		"rdt:dp4": {
+			"prov:entity": "rdt:d1",
+			"prov:activity": "rdt:p6"
+		},
+		"rdt:dp5": {
+			"prov:entity": "rdt:d6",
+			"prov:activity": "rdt:p6"
+		},
+		"rdt:dp6": {
+			"prov:entity": "rdt:d2",
+			"prov:activity": "rdt:p7"
+		},
+		"rdt:dp7": {
+			"prov:entity": "rdt:d6",
+			"prov:activity": "rdt:p7"
+		},
+		"rdt:dp8": {
+			"prov:entity": "rdt:d7",
+			"prov:activity": "rdt:p8"
+		},
+		"rdt:dp9": {
+			"prov:entity": "rdt:d4",
+			"prov:activity": "rdt:p8"
+		},
+		"rdt:dp10": {
+			"prov:entity": "rdt:d8",
+			"prov:activity": "rdt:p9"
+		},
+		"rdt:dp11": {
+			"prov:entity": "rdt:d4",
+			"prov:activity": "rdt:p9"
+		},
+
+		// function-to-procedure edges
+		"rdt:fp1": {
+			"prov:entity": "rdt:f1",
+			"prov:activity": "rdt:p4"
+		},
+		"rdt:fp2": {
+			"prov:entity": "rdt:f1",
+			"prov:activity": "rdt:p5"
+		},
+		"rdt:fp3": {
+			"prov:entity": "rdt:f2",
+			"prov:activity": "rdt:p8"
+		},
+		"rdt:fp4": {
+			"prov:entity": "rdt:f2",
+			"prov:activity": "rdt:p9"
+		}
+	},
+
+	"hadMember" : {
+		// groups function nodes with their library nodes
+		"rdt:m1": {
+			"prov:collection": "rdt:l9",
+			"prov:entity": "rdt:f1"
+		},
+		"rdt:m2": {
+			"prov:collection": "rdt:l9",
+			"prov:entity": "rdt:f2"
+		}
+	}
+}

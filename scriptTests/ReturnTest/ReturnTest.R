@@ -52,17 +52,17 @@ a <- 1
 b <- 2
 
 # Testing a simple call and return
-i <- f2(a)
+c <- f2(a)
 
 # Testing a return statement that contains an expression
-e <- f3(a, b)
+d <- f3(a, b)
 
 # Testing a function calling a function
-d <- f(a, b)
-stopifnot(d == 20)
+e <- f(a, b)
+stopifnot(e == 20)
 
 # Testing a function calling a function calling a function
-i <- f8(a, b)
+k <- f8(a, b)
 
 
 # Testing 2 calls to the same function in one statement
@@ -74,8 +74,8 @@ x <- 0
 h <- f6(abc, 5, "a b", x + 1)
 
 # Tests recursion
-x <- f4(3)
-x <- f7(3)
+i <- f4(3)
+j <- f7(3)
 
 # Tests returning NULL when no branch of a final
 # if is executed
