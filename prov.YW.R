@@ -105,13 +105,4 @@ tryCatch (
   error = function(e) {}
 )
 
-# Test error
-
-#@BEGIN read.csv
-#@IN x.csv
-#@OUT data
-data <- read.csv( './data/x.csv' , header = FALSE )
-#@END read.csv
-apply(data,2,sum)
-prov.quit()
 #@END basicTest

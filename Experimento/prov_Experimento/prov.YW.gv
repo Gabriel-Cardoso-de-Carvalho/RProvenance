@@ -1,0 +1,70 @@
+digraph Workflow {
+rankdir=LR
+fontname=Courier; fontsize=18; labelloc=t
+label=Experimento
+subgraph cluster_workflow_box_outer { label=""; color=black; penwidth=2
+subgraph cluster_workflow_box_inner { label=""; color=white
+node[shape=box style=filled fillcolor="#CCFFCC" peripheries=1 fontname=Courier]
+"read.table"
+par
+"interaction.plot"
+aov
+"model.tables"
+plot
+resid
+title
+boxplot
+qqnorm
+qqline
+"shapiro.test"
+TukeyHSD
+qtukey
+edge[fontname=Helvetica]
+par -> "interaction.plot" [label=ctrl1]
+aov -> "model.tables" [label="ex04.av"]
+aov -> plot [label="ex04.av"]
+aov -> resid [label="ex04.av"]
+aov -> TukeyHSD [label="ex04.av"]
+"interaction.plot" -> par [label=ctrl2]
+"interaction.plot" -> plot [label=ctrl3]
+aov -> par [label=ctrl4]
+"read.table" -> plot [label=ex04]
+resid -> plot [label=residuos]
+resid -> qqnorm [label=residuos]
+resid -> qqline [label=residuos]
+resid -> "shapiro.test" [label=residuos]
+par -> title [label=ctrl5]
+plot -> title [label=ctrl6]
+par -> par [label=ctrl7]
+plot -> plot [label=ctrl8]
+title -> title [label=ctrl9]
+plot -> boxplot [label=ctrl10]
+title -> title [label=ctrl11]
+par -> qqnorm [label=ctrl12]
+plot -> qqline [label=ctrl13]
+title -> title [label=ctrl14]
+TukeyHSD -> plot [label="ex04.tk"]
+boxplot -> plot [label=ctrl15]
+resid -> qtukey [label=s3]
+}}
+subgraph cluster_input_ports_group_outer { label=""; color=white
+subgraph cluster_input_ports_group_inner { label=""; color=white
+node[shape=circle style=filled fillcolor="#FFFFFF" peripheries=1 fontname=Courier width=0.2]
+"exemplo04.txt_input_port" [label=""]
+}}
+subgraph cluster_output_ports_group_outer { label=""; color=white
+subgraph cluster_output_ports_group_inner { label=""; color=white
+node[shape=circle style=filled fillcolor="#FFFFFF" peripheries=1 fontname=Courier width=0.2]
+"ex04.avi_output_port" [label=""]
+"ex04.mt_output_port" [label=""]
+"ex04.avr_output_port" [label=""]
+"ex04.ave_output_port" [label=""]
+}}
+edge[fontname=Helvetica]
+"exemplo04.txt_input_port" -> "read.table" [label="exemplo04.txt"]
+edge[fontname=Helvetica]
+aov -> "ex04.avi_output_port" [label="ex04.avi"]
+"model.tables" -> "ex04.mt_output_port" [label="ex04.mt"]
+aov -> "ex04.avr_output_port" [label="ex04.avr"]
+aov -> "ex04.ave_output_port" [label="ex04.ave"]
+}

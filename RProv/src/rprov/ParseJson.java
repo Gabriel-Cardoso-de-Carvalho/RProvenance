@@ -26,6 +26,7 @@ public class ParseJson {
     public LinkedList<WasGeneratedBy> generatedBy;
     public LinkedList<Used> used;
     public LinkedList<String> lines;
+    public boolean ctrl;
 
     /**
      *
@@ -33,7 +34,8 @@ public class ParseJson {
      * @param scriptFileName
      * 
      */
-    public ParseJson(String provFileName, String scriptFileName) {
+    public ParseJson(String provFileName, String scriptFileName,boolean ctrl) {
+        this.ctrl = ctrl;
         json = new File(provFileName);
         script = new File(scriptFileName);
         activities = new LinkedList<>();
@@ -260,7 +262,8 @@ public class ParseJson {
             }
             
         } catch (FileNotFoundException ex) {
-            System.out.println("File of provenance was not found");
+            System.out.println("Provenance file was not found");
+            System.out.println("Path: "+provFileName);
             System.exit(-1);
         } catch (IOException ex) {
             System.out.println("Other Problem");
@@ -268,21 +271,29 @@ public class ParseJson {
         }
         
         try{
-            Scanner scanner = new Scanner(script);
-            while(scanner.hasNext()){
-                this.lines.add(scanner.nextLine());
+            //Scanner scanner = new Scanner(new File("C:\\Users\\Gaburieru\\Desktop\\Experimento.R"));
+            BufferedReader br = new BufferedReader(new FileReader(new File(scriptFileName)));
+            String next = br.readLine();
+            while(next!=null){
+                //System.out.println(next);
+                lines.add(next);
+                next = br.readLine();
             }
             
         }catch (FileNotFoundException ex) {
             System.out.println("Path for the Script is not correct");
+            System.out.println("Path: " + scriptFileName);
+        }catch (IOException ex) {
+            System.out.println("Unknown Problem");
         }
         
         //Process the parsed provenance
         
+        if(false) printJson();
         this.manage();
                 
         try{
-            PrintWriter fw = new PrintWriter(new FileWriter(json.getPath().substring(0, json.getPath().length()-5)+".YW"));
+            PrintWriter fw = new PrintWriter(new FileWriter(json.getPath().substring(0, json.getPath().length()-5)+".YW.R"));
             for (int i = 0; i < this.lines.size(); i++) {
                 fw.print(lines.get(i)+"\n");
             }
@@ -297,6 +308,7 @@ public class ParseJson {
         }
         
         if(false) printJson();
+        
     }
     
     //Managing all the atributions and uses
@@ -366,6 +378,11 @@ public class ParseJson {
         for (int i = 0; i < atividadesFuncoes.size(); i++) {
             //System.out.println(atividadesFuncoes.get(i).activity);
             //Adiciona #@BEGIN
+            //System.out.println("begin debug");
+            //for (int j = 0; j < lines.size(); j++) {
+            //    System.out.println(lines.get(j));
+            //}
+            //System.out.println("end debug");
             lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1), 
                     "\n#@BEGIN "+atividadesFuncoes.get(i).entity.name);
             incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
@@ -376,9 +393,11 @@ public class ParseJson {
                 //System.out.println(usados.get(j));
                 if(!"function".equals(usados.get(j).valType)){
                     if("Device".equals(usados.get(j).valType)){
-                        lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1),
-                            "#@IN ctrl"+controleEntrada++);
-                        incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
+                        if (ctrl){
+                            lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1),
+                                "#@IN ctrl"+controleEntrada++);
+                            incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
+                        }
                         
                     }else{
                         lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1),
@@ -392,10 +411,11 @@ public class ParseJson {
             for (int j = 0; j < gerados.size(); j++) {
                 geradosPorFuncao.add(gerados.get(j));
                 if("Device".equals(gerados.get(j).valType)){
-                    lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1), 
-                        "#@OUT ctrl"+controleSaida++);
-                    incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
-                    
+                    if (ctrl) {
+                        lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1), 
+                            "#@OUT ctrl"+controleSaida++);
+                        incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-2);
+                    }
                 }else{
                     lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset-1), 
                         "#@OUT "+gerados.get(j).name);
@@ -403,8 +423,16 @@ public class ParseJson {
                 }
             }
             //Adiciona #@END
-            lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset), 
+            //System.out.println("-----------BEGIN DEBUG----------");
+            //System.out.println(atividadesFuncoes.get(i));
+            //System.out.println("------------END DEBUG-----------");
+            try{lines.add((int)(atividadesFuncoes.get(i).activity.startLine+atividadesFuncoes.get(i).activity.offset), 
                     "#@END "+atividadesFuncoes.get(i).entity.name);
+            }catch(IndexOutOfBoundsException ex){
+                for (int j = 0; j < lines.size(); j++) {
+                    System.out.println(lines.get(j));
+                }
+            }
             incrementOffset(Integer.parseInt(atividadesFuncoes.get(i).activity.id.substring(1))-1);
         }
         
@@ -451,9 +479,9 @@ public class ParseJson {
             for (int i = 0; i < this.used.size(); i++) {
                 System.out.println(this.used.get(i));
             }
-            System.out.println("Output Script:");
-            for (int i = 0; i < this.lines.size(); i++) {
-                System.out.println(this.lines.get(i));
-            }
+            //System.out.println("Output Script:");
+            //for (int i = 0; i < this.lines.size(); i++) {
+            //    System.out.println(this.lines.get(i));
+            //}
     }
 }
